@@ -1,0 +1,6 @@
+name: new-relic-test-1
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: testing pulumi / new relic / python
