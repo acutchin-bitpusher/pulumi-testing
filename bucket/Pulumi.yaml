@@ -1,0 +1,6 @@
+name: acbptest-bucket
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Aaron/BP testing pulumi bucket

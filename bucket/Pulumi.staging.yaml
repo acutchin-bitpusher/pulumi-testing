@@ -1,0 +1,4 @@
+config:
+  gcp:project: "942793235455"
+  acbptest-bucket:data:
+    unique_string: "23oi23nsdf"
