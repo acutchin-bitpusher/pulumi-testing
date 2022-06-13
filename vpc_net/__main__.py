@@ -17,32 +17,26 @@ commontags = {
   "stack": pulumi_stack_name,
 }
 
-##  external ip address
+##  EXTERNAL IP ADDRESS
 ip_addr = gcp.compute.Address(
   resource_name = resource_name_prefix
 )
 external_ip = ip_addr.address
+pulumi.export('external_ip', ip_addr.address)
 
 ##  VPC/NETWORK
-###  https://www.pulumi.com/registry/packages/gcp/api-docs/compute/network/
-#network = gcp.compute.Network(
-#  ## resource_name, positional first arg, Must be a match of regex '(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?)',
-#  resource_name_prefix,
-#  name = resource_name_prefix,
-#  description = env_config["vpc_net"]["description"],
-#  routing_mode = env_config["vpc_net"]["routing_mode"],
-#)
-#pulumi.export( "vpc_net_gateway_ipv4", network.gateway_ipv4 )
-#pulumi.export( "vpc_net_id", network.id )
-###  "selfLInk" is supposed to be an output according to: https://www.pulumi.com/registry/packages/gcp/api-docs/compute/network/#id_python
-##pulumi.export( "vpc_net_selfLink", network.selfLink )
-
-#network = network.Vpc(
-#  resource_name_prefix,
-#  network.VpcArgs(
-#    subnet_cidr_blocks = env_config["vpc_net"]["cidr_blocks"]
-#  )
-#)
+##  https://www.pulumi.com/registry/packages/gcp/api-docs/compute/network/
+network = gcp.compute.Network(
+  ## resource_name; positional first arg; must match regex: '(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?)',
+  resource_name_prefix,
+  name = resource_name_prefix,
+  description = env_config["vpc_net"]["description"],
+  routing_mode = env_config["vpc_net"]["routing_mode"],
+)
+pulumi.export( "vpc_net_gateway_ipv4", network.gateway_ipv4 )
+pulumi.export( "vpc_net_id", network.id )
+##  "selfLInk" is supposed to be an output according to: https://www.pulumi.com/registry/packages/gcp/api-docs/compute/network/#id_python
+#pulumi.export( "vpc_net_selfLink", network.selfLink )
 
 #network_interface = [
 #    {
@@ -67,5 +61,4 @@ external_ip = ip_addr.address
 #pulumi.export('instance_name', instance.name)
 #pulumi.export('instance_meta_data', instance.metadata)
 #pulumi.export('instance_network', instance.network_interfaces)
-#pulumi.export('external_ip', addr.address)
 
