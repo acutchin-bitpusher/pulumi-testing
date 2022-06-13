@@ -33,7 +33,8 @@ firewall = gcp.compute.Firewall(
   resource_name_prefix,
   #project = pulumi_project_name,
   network = vpc_net_stack_ref.get_output("vpc_net_self_link"),
-  source_tags = ["ssh-ingress"],
+  #source_tags = ["ssh-ingress"],
+  target_tags = ["ssh-ingress"],
   allows = [
     gcp.compute.FirewallAllowArgs(
       protocol="icmp"
