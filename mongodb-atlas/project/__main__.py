@@ -31,16 +31,16 @@ env_config = config.require_object("env_config")
 import sys
 sys.path.insert(0, '../../lib/mongodbatlas')
 from project import Project, ProjectArgs
-#Project(
-#    #resource_name = "my-custom-iac-mongo-project",
-#    resource_name = pulumi_proj_stack,
-#    args=ProjectArgs(
-#        #name = "my-custom-iac-mongo-project",
-#        name = pulumi_proj_stack,
-#        #org_id="61795f80e17d1a21780e34ee",  # Change this to match your Org ID in Mongo DB Atlas
-#        org_id = mdba-org-id,
-#    ),
-#)
+Project(
+    #resource_name = "my-custom-iac-mongo-project",
+    resource_name = pulumi_proj_stack,
+    args=ProjectArgs(
+        #name = "my-custom-iac-mongo-project",
+        name = pulumi_proj_stack,
+        #org_id="61795f80e17d1a21780e34ee",  # Change this to match your Org ID in Mongo DB Atlas
+        org_id = mdba_org_id,
+    ),
+)
 
 #pulumi.export('instance_name', ssh_instance.name)
 #pulumi.export('instance_meta_data', ssh_instance.metadata)
