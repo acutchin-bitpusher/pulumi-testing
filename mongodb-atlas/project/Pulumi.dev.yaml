@@ -1,8 +1,12 @@
 config:
-  acbptest-mdba-project:pulumi_org_name: "acutchin-bitpusher"
-  acbptest-mdba-project:mdba_org_id: "62a713021143b706b7e6cec6"
-  acbptest-mdba-project:mdba_org_name: "Bitpusher-LLC"
   acbptest-mdba-project:env_config:
-    gcp_region: "us-west1"
-    unique_string: "23sdfb2p"
-    description: "acutchin@bitpusher test mdba project - dev"
+    description: acutchin@bitpusher test mdba project - dev
+    gcp_region: us-west1
+    unique_string: 23sdfb2p
+  acbptest-mdba-project:mdba_org_id: 62a713021143b706b7e6cec6
+  acbptest-mdba-project:mdba_org_name: Bitpusher-LLC
+  acbptest-mdba-project:pulumi_org_name: acutchin-bitpusher
+  mongodbatlas:privateKey:
+    secure: AAABAFRUpE2qESM3hG+E1WQBvozsYg3ZYyMzgxM827JgquvtsUtL3OrfkbNG4kqIWiXBvV+avZVMpWSkLDXpVBm442M=
+  mongodbatlas:publicKey:
+    secure: AAABAMW01XWM5jpdQP1csnjFWC6obIe5BKBO1oXa4LPdCWatEipGNA==
