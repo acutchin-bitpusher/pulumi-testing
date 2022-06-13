@@ -4,7 +4,7 @@ import pulumi_gcp as gcp
 config = pulumi.Config()
 pulumi_stack_name = pulumi.get_stack()
 pulumi_project_name = pulumi.get_project()
-pulumi_org_name = config.require("org")
+#pulumi_org_name = config.require("org")
 print( "   pulumi_stack_name: ", pulumi_stack_name )
 print( " pulumi_project_name: ", pulumi_project_name )
 
@@ -18,9 +18,9 @@ commontags = {
   "stack": pulumi_stack_name,
 }
 
-stack_ref = pulumi.StackReference(f"{org}/my-first-app/{stack}")
+#stack_ref = pulumi.StackReference(f"{org}/my-first-app/{stack}")
 
-pulumi.export("shopUrl", stack_ref.get_output("url"))
+#pulumi.export("shopUrl", stack_ref.get_output("url"))
 
 
 #firewall = gcp.compute.Firewall(
