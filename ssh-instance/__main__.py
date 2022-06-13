@@ -4,7 +4,7 @@ import pulumi_gcp as gcp
 config = pulumi.Config()
 pulumi_stack_name = pulumi.get_stack()
 pulumi_project_name = pulumi.get_project()
-#pulumi_org_name = config.require("org")
+pulumi_org_name = config.require("org")
 print( "   pulumi_stack_name: ", pulumi_stack_name )
 print( " pulumi_project_name: ", pulumi_project_name )
 
@@ -18,33 +18,74 @@ commontags = {
   "stack": pulumi_stack_name,
 }
 
-#stack_ref = pulumi.StackReference(f"{org}/my-first-app/{stack}")
+vpc_net_stack_ref = pulumi.StackReference( f"{pulumi_org_name}/acbptest-network/{pulumi_stack_name}" )
+pulumi.export( "vpc_network_self_link", vpc_net_stack_ref.get_output("vpc_net_self_link") )
 
-#pulumi.export("shopUrl", stack_ref.get_output("url"))
+##  CAN'T PRINT AN OUTPUT (EVEN FROM ANOTHER STACK)
+##  BECAUSE AN OUTPUT IS A CONTAINER FOR A DEFERRED VALUE THAT IS NOT YET AVAILABLE WHEN PRINT IS CALLED
+##  PRINTS SOMETHING LIKE: "<pulumi.output.Output object at 0x106c3e2e0>"
+#print( "vpc_network_self_link: ", vpc_net_stack_ref.get_output("vpc_net_self_link") )
 
+vpc_network = vpc_net_stack_ref.get_output( "vpc_network" )
+pulumi.export( "vpc_network_name", vpc_network["name"] )
 
-#firewall = gcp.compute.Firewall(
-#  resource_name_prefix + "-" + "ssh-instance",
-#  network = network.self_link,
-#  allows=[{
-#    'protocol': "tcp",
-#    'ports': ["22", "80", "443"]
-#  }]
-#  source_tags = ["some_mysterious_tag"]
+firewall = gcp.compute.Firewall(
+  resource_name_prefix,
+  #project = pulumi_project_name,
+  network = vpc_net_stack_ref.get_output("vpc_net_self_link"),
+  source_tags = ["ssh-ingress"],
+  allows = [
+    gcp.compute.FirewallAllowArgs(
+      protocol="icmp"
+    ),
+    gcp.compute.FirewallAllowArgs(
+      protocol="tcp",
+      ports=["22", "80", "443"],
+    ),
+  ],
+)
+
+#default_account = gcp.service_account.Account(
+#  "defaultAccount",
+#  #resource_name_prefix + "-" + "ssh-instance",
+#  account_id="service_account_id",
+#  display_name="Service Account"
+#  #display_name = ( resource_name_prefix + "-" + "ssh-instance" ),
 #)
-#
-#network_interface = [
-#    {
-#        'network': network.id,
-#        'accessConfigs': [{'nat_ip': external_ip}],
-#    }
-#]
-#
-#instance = compute.Instance('orb-pulumi-gcp', name='orb-pulumi-gcp', boot_disk=disk, machine_type='g1-small',
-#                            network_interfaces=network_interface, metadata=meta_data)
-#
-## Export the DNS name of the bucket
-#pulumi.export('instance_name', instance.name)
-#pulumi.export('instance_meta_data', instance.metadata)
-#pulumi.export('instance_network', instance.network_interfaces)
-#
+ssh_instance = gcp.compute.Instance(
+  resource_name_prefix,
+  name = resource_name_prefix,
+  machine_type = "f1-micro",
+  zone = ( env_config["gcp_region"] + "-a" ),
+  tags = [
+    "ssh-ingress",
+  ],
+  boot_disk=gcp.compute.InstanceBootDiskArgs(
+    initialize_params=gcp.compute.InstanceBootDiskInitializeParamsArgs(
+      image="debian-cloud/debian-9",
+    ),
+  ),
+#  scratch_disks=[gcp.compute.InstanceScratchDiskArgs(
+#    interface="SCSI",
+#  )],
+  network_interfaces=[
+    gcp.compute.InstanceNetworkInterfaceArgs(
+      #network="default",
+      network = vpc_net_stack_ref.get_output("vpc_net_self_link"),
+      access_configs = [
+        gcp.compute.InstanceNetworkInterfaceAccessConfigArgs()
+      ],
+    )
+  ],
+  metadata={
+    "foo": "bar",
+  },
+  metadata_startup_script="echo hi > /test.txt",
+#  service_account = gcp.compute.InstanceServiceAccountArgs(
+#    email = default_account.email,
+#    scopes = ["cloud-platform"],
+#  )
+)
+pulumi.export('instance_name', ssh_instance.name)
+pulumi.export('instance_meta_data', ssh_instance.metadata)
+pulumi.export('instance_network', ssh_instance.network_interfaces)
