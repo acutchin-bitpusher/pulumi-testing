@@ -1,0 +1,6 @@
+config:
+  gcp:project: "942793235455"
+  gcp:region: "us-west1"
+  acbptest-ssh-instance:env_config:
+    unique_string: "23sdfb2p"
+    description: "test ssh instance"

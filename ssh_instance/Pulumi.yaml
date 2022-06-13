@@ -1,0 +1,6 @@
+name: acbptest-ssh-instance
+description: Aaron/BP testing pulumi ssh instance
+runtime:
+  name: python
+  options:
+    virtualenv: venv
