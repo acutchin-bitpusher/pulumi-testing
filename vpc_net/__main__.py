@@ -36,14 +36,7 @@ network = gcp.compute.Network(
 pulumi.export( "vpc_net_gateway_ipv4", network.gateway_ipv4 )
 pulumi.export( "vpc_net_id", network.id )
 ##  "selfLInk" is supposed to be an output according to: https://www.pulumi.com/registry/packages/gcp/api-docs/compute/network/#id_python
-#pulumi.export( "vpc_net_selfLink", network.selfLink )
-
-#network_interface = [
-#    {
-#        'network': network.id,
-#        'accessConfigs': [{'nat_ip': external_ip}],
-#    }
-#]
+pulumi.export( "vpc_net_self_link", network.self_link )
 
 #firewall = gcp.compute.Firewall(
 #  resource_name_prefix + "-" + "firewall",
@@ -52,7 +45,15 @@ pulumi.export( "vpc_net_id", network.id )
 #    'protocol': "tcp",
 #    'ports': ["22", "80", "443"]
 #  }]
+#  source_tags = ["some_mysterious_tag"]
 #)
+
+#network_interface = [
+#    {
+#        'network': network.id,
+#        'accessConfigs': [{'nat_ip': external_ip}],
+#    }
+#]
 
 #instance = compute.Instance('orb-pulumi-gcp', name='orb-pulumi-gcp', boot_disk=disk, machine_type='g1-small',
 #                            network_interfaces=network_interface, metadata=meta_data)
