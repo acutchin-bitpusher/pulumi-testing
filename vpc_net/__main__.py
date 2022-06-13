@@ -17,11 +17,11 @@ commontags = {
   "stack": pulumi_stack_name,
 }
 
-###  external ip address
-#ip_addr = gcp.compute.Address.address(
-#  resource_name = resource_name_prefix
-#)
-#external_ip = ip_addr.address
+##  external ip address
+ip_addr = gcp.compute.Address(
+  resource_name = resource_name_prefix
+)
+external_ip = ip_addr.address
 
 ##  VPC/NETWORK
 ###  https://www.pulumi.com/registry/packages/gcp/api-docs/compute/network/
