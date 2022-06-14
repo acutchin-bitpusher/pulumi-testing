@@ -31,7 +31,7 @@ env_config = config.require_object("env_config")
 import sys
 sys.path.insert(0, '../../lib/mongodbatlas')
 from project import Project, ProjectArgs
-Project(
+mdba_project = Project(
     #resource_name = "my-custom-iac-mongo-project",
     resource_name = pulumi_proj_stack,
     args=ProjectArgs(
@@ -41,7 +41,47 @@ Project(
         org_id = mdba_org_id,
     ),
 )
+pulumi.export( "mdba_project", mdba_project )
 
-#pulumi.export('instance_name', ssh_instance.name)
-#pulumi.export('instance_meta_data', ssh_instance.metadata)
-#pulumi.export('instance_network', ssh_instance.network_interfaces)
+###  ATLAS/MONGODB PROJECT NETWORK CONTAINER
+## https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
+## https://docs.atlas.mongodb.com/reference/api/vpc-create-container/
+## https://docs.atlas.mongodb.com/security-vpc-peering/
+#from networkcontainer import NetworkContainer, NetworkContainerArgs
+#atlas_network_container_cidr = config.require( "atlas_network_container_cidr" )
+#network_container = NetworkContainer(
+#    #resource_name = "my-custom-iac-mongo-vpc",
+#    resource_name = pulumi_proj_stack,
+#    args=NetworkContainerArgs(
+#        #atlas_cidr_block = "10.8.0.0/21",
+#        atlas_cidr_block = atlas_network_container_cidr
+#        project_id="61b756e95956bc73c48944fe",  # Change this value to match the desired Mongo DB Atlas Project ID
+#        project_id="61b756e95956bc73c48944fe",  # Change this value to match the desired Mongo DB Atlas Project ID
+#        provider_name="GCP",
+#        regions=["CENTRAL_US"],
+#    ),
+#)
+#
+## https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
+## https://docs.atlas.mongodb.com/reference/api/vpc-create-container/
+## https://docs.atlas.mongodb.com/security-vpc-peering/
+## https://docs.mongodb.com/mongocli/v1.16/reference/atlas/networking-containers-list/
+#
+#from devops_plm_gcp_infra.mongodbatlas.alpha.networkpeering import (
+#    NetworkPeering,
+#    NetworkPeeringArgs,
+#    ResourceOptions,
+#)
+#
+#NetworkPeering(
+#    resource_name="my-custom-iac-mongo-vpc-peering",
+#    opts=ResourceOptions(depends_on=[container1]),
+#    args=NetworkPeeringArgs(
+#        container_id="61b76758776cd47e697667be",  # See this in order to obtain container id value from previous step https://docs.mongodb.com/mongocli/v1.16/reference/atlas/networking-containers-list/
+#        project_id="61b756e95956bc73c48944fe",  # Change this value to match the desired Mongo DB Atlas Project ID
+#        provider_name="GCP",
+#        gcp_project_id="univision-test-ott-apps",
+#        atlas_gcp_project_id="univision-test-ott-apps",
+#        network_name="default",
+#    ),
+#)

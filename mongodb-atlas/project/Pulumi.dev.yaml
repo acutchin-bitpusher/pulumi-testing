@@ -3,9 +3,11 @@ config:
     description: acutchin@bitpusher test mdba project - dev
     gcp_region: us-west1
     unique_string: 23sdfb2p
+    atlas_network_container_cidr: "192.168.1.0/24"
   acbptest-mdba-project:mdba_org_id: 62a713021143b706b7e6cec6
   acbptest-mdba-project:mdba_org_name: Bitpusher-LLC
   acbptest-mdba-project:pulumi_org_name: acutchin-bitpusher
+  acbptest-mdba-project:atlas_network_container_cidr: "192.168.1.0/24"
   mongodbatlas:privateKey:
     secure: AAABAFRUpE2qESM3hG+E1WQBvozsYg3ZYyMzgxM827JgquvtsUtL3OrfkbNG4kqIWiXBvV+avZVMpWSkLDXpVBm442M=
   mongodbatlas:publicKey:
