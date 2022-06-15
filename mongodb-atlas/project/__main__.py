@@ -43,25 +43,25 @@ mdba_project = Project(
 )
 pulumi.export( "mdba_project", mdba_project )
 
-###  ATLAS/MONGODB PROJECT NETWORK CONTAINER
-## https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
-## https://docs.atlas.mongodb.com/reference/api/vpc-create-container/
-## https://docs.atlas.mongodb.com/security-vpc-peering/
-#from networkcontainer import NetworkContainer, NetworkContainerArgs
+##  ATLAS/MONGODB PROJECT NETWORK CONTAINER
+##  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
+##  https://docs.atlas.mongodb.com/reference/api/vpc-create-container/
+##  https://docs.atlas.mongodb.com/security-vpc-peering/
+from networkcontainer import NetworkContainer, NetworkContainerArgs
 #atlas_network_container_cidr = config.require( "atlas_network_container_cidr" )
-#network_container = NetworkContainer(
-#    #resource_name = "my-custom-iac-mongo-vpc",
-#    resource_name = pulumi_proj_stack,
-#    args=NetworkContainerArgs(
-#        #atlas_cidr_block = "10.8.0.0/21",
-#        atlas_cidr_block = atlas_network_container_cidr
-#        project_id="61b756e95956bc73c48944fe",  # Change this value to match the desired Mongo DB Atlas Project ID
-#        project_id="61b756e95956bc73c48944fe",  # Change this value to match the desired Mongo DB Atlas Project ID
-#        provider_name="GCP",
-#        regions=["CENTRAL_US"],
-#    ),
-#)
-#
+network_container = NetworkContainer(
+    resource_name = pulumi_proj_stack,
+    args=NetworkContainerArgs(
+        atlas_cidr_block = env_config["mdba_network_container_cidr"],
+        project_id = mdba_project.project.id,
+        provider_name = "GCP",
+        ##  Provide this field only if you provide an atlas_cidr_block smaller than /18
+        ##  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
+        #regions = [ env_config["mdba_network_container_gcp_region"] ],
+    ),
+)
+pulumi.export( "mdba_network_container", network_container )
+
 ## https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
 ## https://docs.atlas.mongodb.com/reference/api/vpc-create-container/
 ## https://docs.atlas.mongodb.com/security-vpc-peering/
