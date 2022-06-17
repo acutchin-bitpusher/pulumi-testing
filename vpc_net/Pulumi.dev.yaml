@@ -1,17 +1,16 @@
 config:
   gcp:project: "942793235455"
   gcp:region: "us-west1"
-  acbptest-network:env_config:
+  vpc-net:env_config:
     unique_string: "293hguweh"
-    vpc_net:
-      description: "vpc network for ac/bp test pulumi-driven env"
-      routing_mode: "REGIONAL"
-      cidr_blocks: [
-        "10.200.0.0/24",
-        "10.200.1.0/24",
-        "10.200.2.0/24",
-        "10.200.3.0/24",
-        "10.200.4.0/24",
-        "10.200.5.0/24",
-        "10.200.6.0/24",
-      ]
+    description: "acutchin@bitpusher.com testing pulumi-driven vpc network - dev env"
+    routing_mode: "REGIONAL"
+    cidr_blocks: [
+      "10.200.0.0/24",
+      "10.200.1.0/24",
+      "10.200.2.0/24",
+      "10.200.3.0/24",
+      "10.200.4.0/24",
+      "10.200.5.0/24",
+      "10.200.6.0/24",
+    ]

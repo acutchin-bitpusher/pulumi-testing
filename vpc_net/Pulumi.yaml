@@ -1,6 +1,6 @@
-name: acbptest-network
+name: vpc-net
 runtime:
   name: python
   options:
     virtualenv: venv
-description: Aaron/BP testing pulumi gcp network
+description: "acutchin@bitpusher.com testing pulumi-driven vpc network"
