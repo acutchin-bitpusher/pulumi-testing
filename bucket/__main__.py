@@ -15,6 +15,7 @@ env_config = config.require_object("env_config")
 bucket_name = resource_name_prefix + "_" + env_config["unique_string"] + "_bucket"
 print( "         bucket_name: ", bucket_name )
 
+##  https://www.pulumi.com/registry/packages/gcp/api-docs/storage/bucket/
 bucket = gcp.storage.Bucket(
   bucket_name,
   #location='US'

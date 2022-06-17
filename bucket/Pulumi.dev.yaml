@@ -1,5 +1,5 @@
 config:
   gcp:project: "942793235455"
-  acbptest-bucket:env_config:
+  bucket:env_config:
     gcp_region: "US-WEST1"
     unique_string: "weoi23nsd"

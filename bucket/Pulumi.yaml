@@ -1,4 +1,4 @@
-name: acbptest-bucket
+name: bucket
 runtime:
   name: python
   options:
