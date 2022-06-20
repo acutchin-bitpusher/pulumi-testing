@@ -51,23 +51,34 @@ network_container = NetworkContainer(
 )
 pulumi.export( "mdba_network_container", network_container )
 
-###  MONGODB-ATLAS NETWORK PEERING
-###  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkpeering/
-#from networkpeering import NetworkPeering, NetworkPeeringArgs, ResourceOptions
-#network_peering = NetworkPeering(
-#  resource_name = pulumi_proj_stack,
-#  opts=ResourceOptions(depends_on=[network_container]),
-#  args=NetworkPeeringArgs(
-#    container_id = network_container.net_container.container_id,
-#    project_id = mdba_project.project.id,
-#    provider_name = "GCP",
-#    gcp_project_id = env_config["gcp_project_id"],
-#    atlas_gcp_project_id = env_config["gcp_project_id"],
-#    network_name = env_config["gcp_vpc_network"],
-#  ),
-#)
-#pulumi.export( "mdba_network_peering", network_peering )
-#
+##  MONGODB-ATLAS NETWORK PEERING
+##  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkpeering/
+vpc_net_stack_ref = pulumi.StackReference( pulumi_org_name + "/" + env_config["vpc_net_pulumi_project_name"] + "/" + pulumi_stack_name )
+vpc_net = vpc_net_stack_ref.get_output( "vpc-net" )
+pulumi.export( "vpc_net_name", vpc_net["name"] )
+from networkpeering import NetworkPeering, NetworkPeeringArgs, ResourceOptions
+network_peering = NetworkPeering(
+  resource_name = pulumi_proj_stack,
+  opts=ResourceOptions(depends_on=[network_container]),
+  args=NetworkPeeringArgs(
+    ## required:
+    ##   container_id: Any
+    ##   project_id: Any
+    ##   provider_name: str
+    provider_name = "GCP",
+    container_id = network_container.net_container.container_id,
+    ## project_id: "the unique ID for the MongoDB Atlas project to create the database user"
+    #project_id =
+    ## gcp_project_id: "GCP project ID of the owner of the network peer" (LOCAL SIDE)
+    gcp_project_id = env_config["gcp_project_id"],
+    ## atlas_gcp_project_id: "the Atlas GCP Project ID for the GCP VPC used by your atlas cluster that it is need to set up the reciprocal connection" (ATLAS-SIDE/REMOTE)
+    atlas_gcp_project_id = mdba_project.id,
+    network_name = str( vpc_net["name"] ),
+  ),
+)
+pulumi.export( "mdba_network_peering", network_peering )
+
+
 ###  GCP VPC NETWORK PEERING ACCEPTANCE?
 ###  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkpeering/
 #gcp_vpc_network = gcp.compute.get_network(
