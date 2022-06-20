@@ -1,5 +1,5 @@
-name: acbptest-ssh-instance
-description: Aaron/BP testing pulumi ssh instance
+name: ssh-instance
+description: "acutchin@bitpusher.com testing pulumi-driven instance - dev env"
 runtime:
   name: python
   options:

@@ -1,8 +1,9 @@
 config:
   gcp:project: "942793235455"
   gcp:region: "us-west1"
-  acbptest-ssh-instance:org: "acutchin-bitpusher"
-  acbptest-ssh-instance:env_config:
+  ssh-instance:org: "acutchin-bitpusher"
+  ssh-instance:env_config:
     gcp_region: "us-west1"
     unique_string: "23sdfb2p"
     description: "test ssh instance"
+    vpc_net_pulumi_project_name: "vpc-net"
