@@ -50,40 +50,42 @@ firewall = gcp.compute.Firewall(
 #  display_name="Service Account"
 #  #display_name = ( resource_name_prefix + "-" + "ssh-instance" ),
 #)
-#ssh_instance = gcp.compute.Instance(
-#  resource_name_prefix,
-#  name = resource_name_prefix,
-#  machine_type = "f1-micro",
-#  zone = ( env_config["gcp_region"] + "-a" ),
-#  tags = [
-#    "ssh-ingress",
-#  ],
-#  boot_disk=gcp.compute.InstanceBootDiskArgs(
-#    initialize_params=gcp.compute.InstanceBootDiskInitializeParamsArgs(
-#      image="debian-cloud/debian-9",
-#    ),
-#  ),
-#  scratch_disks=[gcp.compute.InstanceScratchDiskArgs(
-#    interface="SCSI",
-#  )],
-#  network_interfaces=[
-#    gcp.compute.InstanceNetworkInterfaceArgs(
-#      #network="default",
-#      network = vpc_net_stack_ref.get_output("vpc_net_self_link"),
-#      access_configs = [
-#        gcp.compute.InstanceNetworkInterfaceAccessConfigArgs()
-#      ],
-#    )
-#  ],
-#  metadata={
-#    "foo": "bar",
-#  },
-#  metadata_startup_script="echo hi > /test.txt",
+ssh_instance = gcp.compute.Instance(
+  resource_name_prefix,
+  name = resource_name_prefix,
+  machine_type = "f1-micro",
+  zone = ( env_config["gcp_region"] + "-b" ),
+  tags = [
+    "ssh-ingress",
+  ],
+  boot_disk=gcp.compute.InstanceBootDiskArgs(
+    initialize_params=gcp.compute.InstanceBootDiskInitializeParamsArgs(
+      image="debian-cloud/debian-9",
+    ),
+  ),
+  ##  NOT COMPATIBLE WITH 'f1-micro' MACHINE TYPE
+  #scratch_disks=[gcp.compute.InstanceScratchDiskArgs(
+  #  interface="SCSI",
+  #)],
+  network_interfaces=[
+    gcp.compute.InstanceNetworkInterfaceArgs(
+      #network="default",
+      #network = vpc_net_stack_ref.get_output("vpc_net_self_link"),
+      network = vpc_net["name"],
+      access_configs = [
+        gcp.compute.InstanceNetworkInterfaceAccessConfigArgs()
+      ],
+    )
+  ],
+  metadata={
+    "foo": "bar",
+  },
+  metadata_startup_script="echo hi > /test.txt",
 #  service_account = gcp.compute.InstanceServiceAccountArgs(
 #    email = default_account.email,
 #    scopes = ["cloud-platform"],
 #  )
-#)
-#pulumi.export('instance_name', ssh_instance.name)
-#pulumi.export('instance_meta_data', ssh_instance.metadata)
-#pulumi.export('instance_network', ssh_instance.network_interfaces)
+)
+pulumi.export('instance_name', ssh_instance.name)
+pulumi.export('instance_meta_data', ssh_instance.metadata)
+pulumi.export('instance_network', ssh_instance.network_interfaces)
