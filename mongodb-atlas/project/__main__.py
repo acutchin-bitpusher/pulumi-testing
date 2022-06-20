@@ -7,81 +7,80 @@
 #https://docs.atlas.mongodb.com/tutorial/configure-api-access/project/create-one-api-key/
 
 import pulumi
+import pulumi_gcp as gcp
+import sys
+sys.path.insert(0, '../../lib/mongodbatlas')
 
 config = pulumi.Config()
 pulumi_stack_name = pulumi.get_stack()
 pulumi_project_name = pulumi.get_project()
 pulumi_org_name = config.require("pulumi_org_name")
-print( "   pulumi_stack_name: ", pulumi_stack_name )
-print( " pulumi_project_name: ", pulumi_project_name )
-
 mdba_org_id = config.require( "mdba_org_id" )
-print( "mdba_org_id: ", mdba_org_id )
-
 mdba_org_name = config.require( "mdba_org_name" )
-print( "mdba_org_name: ", mdba_org_name )
-
 pulumi_proj_stack = pulumi_project_name + "-" + pulumi_stack_name
-print( "pulumi_proj_stack: ", pulumi_proj_stack )
-
 env_config = config.require_object("env_config")
 
 ##  ATLAS/MONGODB PROJECT
 # https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/project/
-import sys
-sys.path.insert(0, '../../lib/mongodbatlas')
 from project import Project, ProjectArgs
 mdba_project = Project(
-    #resource_name = "my-custom-iac-mongo-project",
-    resource_name = pulumi_proj_stack,
-    args=ProjectArgs(
-        #name = "my-custom-iac-mongo-project",
-        name = pulumi_proj_stack,
-        #org_id="61795f80e17d1a21780e34ee",  # Change this to match your Org ID in Mongo DB Atlas
-        org_id = mdba_org_id,
-    ),
+  resource_name = pulumi_proj_stack,
+  args=ProjectArgs(
+    name = pulumi_proj_stack,
+    org_id = mdba_org_id,
+  ),
 )
 pulumi.export( "mdba_project", mdba_project )
 
-##  ATLAS/MONGODB PROJECT NETWORK CONTAINER
+##  ATLAS/MONGODB NETWORK CONTAINER
 ##  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
 ##  https://docs.atlas.mongodb.com/reference/api/vpc-create-container/
 ##  https://docs.atlas.mongodb.com/security-vpc-peering/
 from networkcontainer import NetworkContainer, NetworkContainerArgs
 #atlas_network_container_cidr = config.require( "atlas_network_container_cidr" )
 network_container = NetworkContainer(
-    resource_name = pulumi_proj_stack,
-    args=NetworkContainerArgs(
-        atlas_cidr_block = env_config["mdba_network_container_cidr"],
-        project_id = mdba_project.project.id,
-        provider_name = "GCP",
-        ##  Provide this field only if you provide an atlas_cidr_block smaller than /18
-        ##  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
-        #regions = [ env_config["mdba_network_container_gcp_region"] ],
-    ),
+  resource_name = pulumi_proj_stack,
+  args=NetworkContainerArgs(
+    atlas_cidr_block = env_config["mdba_network_container_cidr"],
+    project_id = mdba_project.project.id,
+    provider_name = "GCP",
+    ##  Provide this field only if you provide an atlas_cidr_block smaller than /18
+    ##  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
+    #regions = [ env_config["mdba_network_container_gcp_region"] ],
+  ),
 )
 pulumi.export( "mdba_network_container", network_container )
 
-## https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
-## https://docs.atlas.mongodb.com/reference/api/vpc-create-container/
-## https://docs.atlas.mongodb.com/security-vpc-peering/
-## https://docs.mongodb.com/mongocli/v1.16/reference/atlas/networking-containers-list/
-#
-#from devops_plm_gcp_infra.mongodbatlas.alpha.networkpeering import (
-#    NetworkPeering,
-#    NetworkPeeringArgs,
-#    ResourceOptions,
+###  MONGODB-ATLAS NETWORK PEERING
+###  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkpeering/
+#from networkpeering import NetworkPeering, NetworkPeeringArgs, ResourceOptions
+#network_peering = NetworkPeering(
+#  resource_name = pulumi_proj_stack,
+#  opts=ResourceOptions(depends_on=[network_container]),
+#  args=NetworkPeeringArgs(
+#    container_id = network_container.net_container.container_id,
+#    project_id = mdba_project.project.id,
+#    provider_name = "GCP",
+#    gcp_project_id = env_config["gcp_project_id"],
+#    atlas_gcp_project_id = env_config["gcp_project_id"],
+#    network_name = env_config["gcp_vpc_network"],
+#  ),
 #)
+#pulumi.export( "mdba_network_peering", network_peering )
 #
-#NetworkPeering(
-#    resource_name="my-custom-iac-mongo-vpc-peering",
-#    opts=ResourceOptions(depends_on=[container1]),
-#    args=NetworkPeeringArgs(
-#        container_id="61b76758776cd47e697667be",  # See this in order to obtain container id value from previous step https://docs.mongodb.com/mongocli/v1.16/reference/atlas/networking-containers-list/
-#        project_id="61b756e95956bc73c48944fe",  # Change this value to match the desired Mongo DB Atlas Project ID
-#        provider_name="GCP",
-#        gcp_project_id="univision-test-ott-apps",
-#        atlas_gcp_project_id="univision-test-ott-apps",
-#        network_name="default",
-#    ),
+###  GCP VPC NETWORK PEERING ACCEPTANCE?
+###  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkpeering/
+#gcp_vpc_network = gcp.compute.get_network(
+#  name = env_config["gcp_vpc_network"],
+#  project = env_config["gcp_project_id"],
 #)
+## Create the GCP peer
+#gcp_peering = gcp.compute.NetworkPeering(
+#  pulumi_proj_stack,
+#  network = gcp_vpc_network.self_link,
+#  peer_network = pulumi.Output.all(
+#    network_peering.networkpeering.atlas_gcp_project_id,
+#    network_peering.networkpeering.atlas_vpc_name,
+#  ).apply(lambda atlas_gcp_project_id, atlas_vpc_name: f"https://www.googleapis.com/compute/v1/projects/{atlas_gcp_project_id}/global/networks/{atlas_vpc_name}")
+#)
+#pulumi.export( "gcp_peering", gcp_peering )

@@ -1,4 +1,4 @@
-name: acbptest-mdba-project
+name: mdba-project
 runtime:
   name: python
 description: acutchin@bitpusher testing pulumi/python/gcp/mongodbatlas project creation

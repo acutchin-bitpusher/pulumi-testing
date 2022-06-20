@@ -1,13 +1,13 @@
 config:
-  acbptest-mdba-project:env_config:
+  mdba-project:env_config:
     description: acutchin@bitpusher test mdba project - dev
+    mdba_network_container_cidr: 172.16.0.0/12
     mdba_network_container_gcp_region: US-WEST-1
-    mdba_network_container_cidr: "172.16.0.0/12"
     unique_string: 23sdfb2p
-  acbptest-mdba-project:mdba_org_id: 62a713021143b706b7e6cec6
-  acbptest-mdba-project:mdba_org_name: Bitpusher-LLC
-  acbptest-mdba-project:pulumi_org_name: acutchin-bitpusher
+  mdba-project:mdba_org_id: 62a713021143b706b7e6cec6
+  mdba-project:mdba_org_name: Bitpusher-LLC
+  mdba-project:pulumi_org_name: acutchin-bitpusher
   mongodbatlas:privateKey:
-    secure: AAABAFRUpE2qESM3hG+E1WQBvozsYg3ZYyMzgxM827JgquvtsUtL3OrfkbNG4kqIWiXBvV+avZVMpWSkLDXpVBm442M=
+    secure: AAABAFs13dYIe65K1P2U3l8VAoz8sVmfeJL9hSYgPSAEXDG04zyf+r8E7V18wtbZECGqNe1VDEAAs5I440TmjfADRW0=
   mongodbatlas:publicKey:
-    secure: AAABAMW01XWM5jpdQP1csnjFWC6obIe5BKBO1oXa4LPdCWatEipGNA==
+    secure: AAABADg4m7tMrZOkkSZdVzs0UxSB8ySSX9l/b7IWVMgt3my3KI7/jw==
