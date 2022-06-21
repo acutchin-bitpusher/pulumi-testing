@@ -20,8 +20,7 @@ mdba_org_name = config.require( "mdba_org_name" )
 pulumi_proj_stack = pulumi_project_name + "-" + pulumi_stack_name
 env_config = config.require_object("env_config")
 
-##  ATLAS/MONGODB PROJECT
-##  CHANGE THIS TO A STACK REFERENCE?
+##  MONGODB-ATLAS PROJECT
 # https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/project/
 from project import Project, ProjectArgs
 mdba_project = Project(
@@ -33,20 +32,18 @@ mdba_project = Project(
 )
 pulumi.export( "mdba_project", mdba_project )
 
-##  ATLAS/MONGODB NETWORK CONTAINER
+##  MONGODB-ATLAS NETWORK CONTAINER
 ##  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
 ##  https://docs.atlas.mongodb.com/reference/api/vpc-create-container/
 ##  https://docs.atlas.mongodb.com/security-vpc-peering/
 from networkcontainer import NetworkContainer, NetworkContainerArgs
-#atlas_network_container_cidr = config.require( "atlas_network_container_cidr" )
 network_container = NetworkContainer(
   resource_name = pulumi_proj_stack,
   args=NetworkContainerArgs(
     atlas_cidr_block = env_config["mdba_network_container_cidr"],
     project_id = mdba_project.project.id,
     provider_name = "GCP",
-    ##  Provide this field only if you provide an atlas_cidr_block smaller than /18
-    ##  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
+    ##  regions (optional): Provide this field only if you provide an atlas_cidr_block smaller than /18; https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
     #regions = [ env_config["mdba_network_container_gcp_region"] ],
   ),
 )
@@ -62,16 +59,17 @@ network_peering = NetworkPeering(
   resource_name = pulumi_proj_stack,
   opts=ResourceOptions(depends_on=[network_container]),
   args=NetworkPeeringArgs(
-    ##  container_id (required): MongoDB-Atlas network container id
+    ##  container_id (required): "Unique identifier of the MongoDB Atlas container for the provider (GCP). You can create an MongoDB Atlas container using the network_container resource or it can be obtained from the cluster returned values if a cluster has been created before the first container."
     container_id = network_container.net_container.container_id,
-    ##  project_id (required): The MongoDB-Atlas project id
+    ##  project_id (required): "The unique ID for the MongoDB Atlas project to create the database user"
     project_id = mdba_project.project.id,
-    ##  provider_name (required): "GCP" or "AWS" ...
+    ##  provider_name (required): "GCP|AWS|AZURE"
     provider_name = "GCP",
     ##  gcp_project_id: "GCP project ID of the owner of the network peer" (LOCAL SIDE)
     gcp_project_id = env_config["gcp_project_id"],
-    ##  atlas_gcp_project_id: "the Atlas GCP Project ID for the GCP VPC used by your atlas cluster that it is need to set up the reciprocal connection" (ATLAS-SIDE/REMOTE)
+    ##  atlas_gcp_project_id: "The Atlas GCP Project ID for the GCP VPC used by your atlas cluster that it is need to set up the reciprocal connection" (ATLAS-SIDE/REMOTE)
     atlas_gcp_project_id = mdba_project.id,
+    ##  network_name (optional): "Name of the network peer to which Atlas connects."
     network_name = str( vpc_net["name"] ),
   ),
 )
