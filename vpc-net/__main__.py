@@ -27,10 +27,8 @@ network = gcp.compute.Network(
   description = env_config["description"],
   routing_mode = env_config["routing_mode"],
 )
-pulumi.export( "vpc-net_gateway_ipv4", network.gateway_ipv4 )
-pulumi.export( "vpc-net_id", network.id )
-##  "selfLInk" is supposed to be an output according to: https://www.pulumi.com/registry/packages/gcp/api-docs/compute/network/#id_python
-pulumi.export( "vpc-net_self_link", network.self_link )
-pulumi.export( "vpc-net", network )
-
-
+pulumi.export( "vpc-net",               network )
+pulumi.export( "vpc-net_gateway_ipv4",  network.gateway_ipv4.apply(lambda x: x) )
+pulumi.export( "vpc-net_id",            network.id.apply(lambda x: x) )
+pulumi.export( "vpc-net_self_link",     network.self_link.apply(lambda x: x) )
+pulumi.export( "vpc-net_name",          network.name.apply(lambda x: x) )
