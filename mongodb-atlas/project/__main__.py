@@ -75,25 +75,19 @@ network_peering = NetworkPeering(
 )
 pulumi.export( "mdba_network_peering", network_peering )
 
-###  CREATE GCP VPC NETWORK PEERING ACCEPTANCE?
-###  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkpeering/
-##gcp_vpc_network = gcp.compute.get_network(
-##  name = env_config["gcp_vpc_network"],
-##  project = env_config["gcp_project_id"],
-##)
-##pulumi.export( "gcp_vpc_network_self_link", gcp_vpc_network.self_link )
-#vpc_net_self_link = vpc_net_stack_ref.get_output( "vpc-net_self_link" )
-#pulumi.export( "vpc_net_self_link", vpc_net_self_link )
-#gcp_peering = gcp.compute.NetworkPeering(
-#  pulumi_proj_stack,
-#  ##  network: "The primary network of the peering"
-#  #network = gcp_vpc_network.self_link,
-#  network = vpc_net_self_link,
-#  ##  peer_network: "the peer network in the peering. The peer network may belong to a different project"
-##  peer_network = pulumi.Output.all(
-##    network_peering.networkpeering.atlas_gcp_project_id,
-##    network_peering.networkpeering.atlas_vpc_name,
-##  ).apply(lambda atlas_gcp_project_id, atlas_vpc_name: f"https://www.googleapis.com/compute/v1/projects/{atlas_gcp_project_id}/global/networks/{atlas_vpc_name}")
-#  peer_network = 
-#)
-#pulumi.export( "gcp_peering", gcp_peering )
+##  CREATE GCP VPC NETWORK PEERING ACCEPTANCE?
+##  BASED ON: https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkpeering/
+##  GET GCP VPC NETWORK SELF LINK:
+#vpc_net_self_link = gcp.compute.get_network(
+#  name = env_config["gcp_vpc_network"],
+#  project = env_config["gcp_project_id"],
+#).self_link  ##  BY READING GCP VPC NETWORK BY NAME & ID
+vpc_net_self_link = vpc_net_stack_ref.get_output( "vpc-net_self_link" )  ##  FROM VPC-NET PULUMI STACK REFERENCE
+gcp_peering = gcp.compute.NetworkPeering(
+  pulumi_proj_stack,
+  ##  network: "The primary network of the peering"
+  network = vpc_net_self_link,
+  ##  peer_network: "the peer network in the peering. The peer network may belong to a different project"
+  peer_network = pulumi.Output.all( network_peering.networkpeering.atlas_gcp_project_id, network_peering.networkpeering.atlas_vpc_name).apply( lambda args: f"https://www.googleapis.com/compute/v1/projects/{args[0]}/global/networks/{args[1]}" )
+)
+pulumi.export( "gcp_peering", gcp_peering )
