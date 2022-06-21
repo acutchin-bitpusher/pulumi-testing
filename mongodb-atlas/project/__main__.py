@@ -21,6 +21,7 @@ pulumi_proj_stack = pulumi_project_name + "-" + pulumi_stack_name
 env_config = config.require_object("env_config")
 
 ##  ATLAS/MONGODB PROJECT
+##  CHANGE THIS TO A STACK REFERENCE?
 # https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/project/
 from project import Project, ProjectArgs
 mdba_project = Project(
@@ -61,37 +62,40 @@ network_peering = NetworkPeering(
   resource_name = pulumi_proj_stack,
   opts=ResourceOptions(depends_on=[network_container]),
   args=NetworkPeeringArgs(
-    ## required:
-    ##   container_id: Any
-    ##   project_id: Any
-    ##   provider_name: str
-    provider_name = "GCP",
+    ##  container_id (required): MongoDB-Atlas network container id
     container_id = network_container.net_container.container_id,
-    ## project_id: "the unique ID for the MongoDB Atlas project to create the database user"
-    #project_id =
-    ## gcp_project_id: "GCP project ID of the owner of the network peer" (LOCAL SIDE)
+    ##  project_id (required): The MongoDB-Atlas project id
+    project_id = mdba_project.project.id,
+    ##  provider_name (required): "GCP" or "AWS" ...
+    provider_name = "GCP",
+    ##  gcp_project_id: "GCP project ID of the owner of the network peer" (LOCAL SIDE)
     gcp_project_id = env_config["gcp_project_id"],
-    ## atlas_gcp_project_id: "the Atlas GCP Project ID for the GCP VPC used by your atlas cluster that it is need to set up the reciprocal connection" (ATLAS-SIDE/REMOTE)
+    ##  atlas_gcp_project_id: "the Atlas GCP Project ID for the GCP VPC used by your atlas cluster that it is need to set up the reciprocal connection" (ATLAS-SIDE/REMOTE)
     atlas_gcp_project_id = mdba_project.id,
     network_name = str( vpc_net["name"] ),
   ),
 )
 pulumi.export( "mdba_network_peering", network_peering )
 
-
-###  GCP VPC NETWORK PEERING ACCEPTANCE?
+###  CREATE GCP VPC NETWORK PEERING ACCEPTANCE?
 ###  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkpeering/
-#gcp_vpc_network = gcp.compute.get_network(
-#  name = env_config["gcp_vpc_network"],
-#  project = env_config["gcp_project_id"],
-#)
-## Create the GCP peer
+##gcp_vpc_network = gcp.compute.get_network(
+##  name = env_config["gcp_vpc_network"],
+##  project = env_config["gcp_project_id"],
+##)
+##pulumi.export( "gcp_vpc_network_self_link", gcp_vpc_network.self_link )
+#vpc_net_self_link = vpc_net_stack_ref.get_output( "vpc-net_self_link" )
+#pulumi.export( "vpc_net_self_link", vpc_net_self_link )
 #gcp_peering = gcp.compute.NetworkPeering(
 #  pulumi_proj_stack,
-#  network = gcp_vpc_network.self_link,
-#  peer_network = pulumi.Output.all(
-#    network_peering.networkpeering.atlas_gcp_project_id,
-#    network_peering.networkpeering.atlas_vpc_name,
-#  ).apply(lambda atlas_gcp_project_id, atlas_vpc_name: f"https://www.googleapis.com/compute/v1/projects/{atlas_gcp_project_id}/global/networks/{atlas_vpc_name}")
+#  ##  network: "The primary network of the peering"
+#  #network = gcp_vpc_network.self_link,
+#  network = vpc_net_self_link,
+#  ##  peer_network: "the peer network in the peering. The peer network may belong to a different project"
+##  peer_network = pulumi.Output.all(
+##    network_peering.networkpeering.atlas_gcp_project_id,
+##    network_peering.networkpeering.atlas_vpc_name,
+##  ).apply(lambda atlas_gcp_project_id, atlas_vpc_name: f"https://www.googleapis.com/compute/v1/projects/{atlas_gcp_project_id}/global/networks/{atlas_vpc_name}")
+#  peer_network = 
 #)
 #pulumi.export( "gcp_peering", gcp_peering )
