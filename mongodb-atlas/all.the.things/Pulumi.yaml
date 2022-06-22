@@ -1,0 +1,4 @@
+name: acbptest-atlas-project
+runtime:
+  name: python
+description: ac bitpusher testing pulumi/python/gcp/mongodbatlas  
