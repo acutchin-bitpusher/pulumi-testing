@@ -1,0 +1,16 @@
+config:
+  mdba-cluster:env_config:
+    auto_scaling_disk_gb_enabled: "False"
+    description: "acutchin@bitpusher test mdba cluster - dev"
+    gcp_region: "us-central1"
+    mdba_project_pulumi_project_name: "mdba-project"
+    mongo_db_major_version: "5.0"
+    mdba_instance_size_name: "M0"
+    mdba_gcp_region_name: "CENTRAL_US"
+  mdba-cluster:mdba_org_id: 62a713021143b706b7e6cec6
+  mdba-cluster:mdba_org_name: Bitpusher-LLC
+  mdba-cluster:pulumi_org_name: acutchin-bitpusher
+  mongodbatlas:privateKey:
+    secure: AAABACwXVfwHVNRDCp4FQfeZVJ240tCnE3qDmE+Ht7h2XYe/N7ksaFuKzp9vGT4hF2uKBDLv/iK5LCfa/ZFDAFqiFjo=
+  mongodbatlas:publicKey:
+    secure: AAABAAnii9QB/UpthVyE/cBEu+kmvYl58jIhTSvjK3Nedd4rkzpt8A==

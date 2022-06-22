@@ -1,0 +1,4 @@
+name: mdba-cluster
+runtime:
+  name: python
+description: acutchin@bitpusher testing pulumi/python/gcp/mongodbatlas cluster/db creation
