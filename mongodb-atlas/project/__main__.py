@@ -121,3 +121,17 @@ gcp_peering = gcp.compute.NetworkPeering(
     #peer_network = pulumi.Output.all( network_peering.atlas_gcp_project_id, network_peering.atlas_vpc_name).apply( lambda args: f"https://www.googleapis.com/compute/v1/projects/{args[0]}/global/networks/{args[1]}" )
 )
 pulumi.export( "gcp_peering", gcp_peering )
+
+##  MONGODB-ATLAS IP ACCESS LIST
+##  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/projectipaccesslist/
+mdba_project_ip_access_list = mongodbatlas.ProjectIpAccessList(
+    #"test",
+    pulumi_proj_stack,
+    #cidr_block = "1.2.3.4/32",
+    cidr_block = env_config["client_vpc_net_cidr"],
+    comment = env_config["client_vpc_net_name"],
+    ##  "Unique identifier for the project to which you want to add one or more access list entries."; MDBA project id
+    project_id = mdba_project.project.id,
+)
+pulumi.export( "mdba_project_ip_access_list", mdba_project_ip_access_list )
+

@@ -2,6 +2,7 @@ config:
   mdba-project:env_config:
     client_gcp_project_id: "aaron-lab"
     client_vpc_net_name: "vpc-net-dev"
+    client_vpc_net_cidr: "10.128.0.0/9"
     client_vpc_net_pulumi_project_name: "vpc-net"
     description: acutchin@bitpusher test mdba project - dev
     mdba_network_container_cidr: 172.16.0.0/12
