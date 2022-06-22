@@ -6,7 +6,7 @@ config:
     client_vpc_net_pulumi_project_name: "vpc-net"
     description: acutchin@bitpusher test mdba project - dev
     mdba_network_container_cidr: 172.16.0.0/12
-    mdba_network_container_gcp_region: US-WEST-1
+    mdba_network_container_gcp_region: US-CENTRAL-1
   mdba-project:mdba_org_id: 62a713021143b706b7e6cec6
   mdba-project:mdba_org_name: Bitpusher-LLC
   mdba-project:pulumi_org_name: acutchin-bitpusher
