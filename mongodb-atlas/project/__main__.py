@@ -129,6 +129,8 @@ mdba_project_ip_access_list = mongodbatlas.ProjectIpAccessList(
     pulumi_proj_stack,
     #cidr_block = "1.2.3.4/32",
     cidr_block = env_config["client_vpc_net_cidr"],
+    ##  comment (optional): APPEARS IN THE MDBA CONSOLE / PROJECT / NETWORK SETTINGS / IP ACCESS LISTS
+    ##  NOTE: CANNOT BE CHANGED AFTER INITIAL CREATION, OR THE LIST WILL BE DELETED FROM MDBA AND THE RESOURCE WILL REMAIN IN THE PULUMI STACK!
     comment = env_config["client_vpc_net_name"],
     ##  "Unique identifier for the project to which you want to add one or more access list entries."; MDBA project id
     project_id = mdba_project.project.id,
