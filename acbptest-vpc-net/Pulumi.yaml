@@ -1,0 +1,6 @@
+name: acbptest-vpc-net
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: "acutchin@bitpusher.com testing pulumi-driven vpc network hosted in ac@bp GCP account""

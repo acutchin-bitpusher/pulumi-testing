@@ -1,7 +1,7 @@
 config:
   gcp:project: "942793235455"
   gcp:region: "us-central1"
-  gcp-vpc-net:env_config:
+  acbptest-vpc-net:env_config:
     description: "acutchin@bitpusher.com testing pulumi-driven vpc network - dev env"
     routing_mode: "REGIONAL"
     cidr_blocks: [
