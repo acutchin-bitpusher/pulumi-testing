@@ -4,7 +4,7 @@ import pulumi_gcp as gcp
 config = pulumi.Config()
 pulumi_stack_name = pulumi.get_stack()
 pulumi_project_name = pulumi.get_project()
-pulumi_org_name = config.require("org")
+pulumi_org_name = config.require("pulumi_org_name")
 print( "   pulumi_stack_name: ", pulumi_stack_name )
 print( " pulumi_project_name: ", pulumi_project_name )
 
@@ -45,12 +45,12 @@ firewall = gcp.compute.Firewall(
 
 #default_account = gcp.service_account.Account(
 #  "defaultAccount",
-#  #resource_name_prefix + "-" + "ssh-instance",
+#  #resource_name_prefix + "-" + "instance",
 #  account_id="service_account_id",
 #  display_name="Service Account"
-#  #display_name = ( resource_name_prefix + "-" + "ssh-instance" ),
+#  #display_name = ( resource_name_prefix + "-" + "instance" ),
 #)
-ssh_instance = gcp.compute.Instance(
+instance = gcp.compute.Instance(
   resource_name_prefix,
   name = resource_name_prefix,
   machine_type = "f1-micro",
@@ -86,6 +86,6 @@ ssh_instance = gcp.compute.Instance(
 #    scopes = ["cloud-platform"],
 #  )
 )
-pulumi.export('instance_name', ssh_instance.name)
-pulumi.export('instance_meta_data', ssh_instance.metadata)
-pulumi.export('instance_network', ssh_instance.network_interfaces)
+pulumi.export('instance_name', instance.name)
+pulumi.export('instance_meta_data', instance.metadata)
+pulumi.export('instance_network', instance.network_interfaces)

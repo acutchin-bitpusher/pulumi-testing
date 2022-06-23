@@ -1,6 +1,6 @@
-name: ssh-instance
-description: "acutchin@bitpusher.com testing pulumi-driven instance - dev env"
+name: acbptest-instance
 runtime:
   name: python
   options:
     virtualenv: venv
+description: "acutchin@bitpusher.com testing pulumi/mongodb-atlas integration, vpc & instance hosted in ac@bp GCP account"

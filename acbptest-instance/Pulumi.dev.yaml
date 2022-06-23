@@ -1,9 +1,7 @@
 config:
   gcp:project: "942793235455"
-  gcp:region: "us-west1"
-  ssh-instance:org: "acutchin-bitpusher"
-  ssh-instance:env_config:
-    gcp_region: "us-west1"
-    unique_string: "23sdfb2p"
-    description: "test ssh instance"
-    vpc_net_pulumi_project_name: "vpc-net"
+  acbptest-instance:pulumi_org_name: "univision"
+  acbptest-instance:env_config:
+    description: "acutchin@bitpusher.com testing pulumi/mongodb-atlas integration, vpc & instance hosted in ac@bp GCP account"
+    gcp_region: "us-central1"
+    vpc_net_pulumi_project_name: "acbptest-vpc-net"
