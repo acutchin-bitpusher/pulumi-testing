@@ -1,4 +1,4 @@
-name: vpc-net
+name: gcp-vpc-net
 runtime:
   name: python
   options:
