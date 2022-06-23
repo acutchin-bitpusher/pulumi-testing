@@ -1,4 +1,4 @@
-name: mdba-project
+name: acbptest-mdba-project
 runtime:
   name: python
-description: acutchin@bitpusher testing pulumi/python/gcp/mongodbatlas project creation
+description: "acutchin@bitpusher.com testing pulumi/mongodb-atlas integration, vpc & instance hosted in ac@bp GCP account, mongodb-atlas resources in Unvision MDBA org"
