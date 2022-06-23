@@ -36,7 +36,7 @@ acbptest_mdba_project = Project(
         org_id = mdba_org_id,
     ),
 )
-pulumi.export( "acbptest_mdba_project", acbptest_mdba_project )
+pulumi.export( "mdba_project", acbptest_mdba_project )
 
 ##  MONGODB-ATLAS NETWORK CONTAINER
 ##  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/
@@ -135,5 +135,5 @@ acbptest_mdba_project_ip_access_list = mongodbatlas.ProjectIpAccessList(
     ##  "Unique identifier for the project to which you want to add one or more access list entries."; MDBA project id
     project_id = acbptest_mdba_project.project.id,
 )
-pulumi.export( "acbptest_mdba_project_ip_access_list", acbptest_mdba_project_ip_access_list )
+pulumi.export( "mdba_project_ip_access_list", acbptest_mdba_project_ip_access_list )
 
