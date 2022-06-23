@@ -3,4 +3,4 @@ runtime:
   name: python
   options:
     virtualenv: venv
-description: "acutchin@bitpusher.com testing pulumi-driven vpc network hosted in ac@bp GCP account""
+description: "acutchin@bitpusher.com testing pulumi/mongodb-atlas integration, vpc hosted in ac@bp GCP account"
