@@ -37,6 +37,7 @@ acbptest_mdba_project = Project(
     ),
 )
 pulumi.export( "mdba_project", acbptest_mdba_project )
+pulumi.export( "mdba_project_id", acbptest_mdba_project.project.id )
 
 ##  MONGODB-ATLAS NETWORK CONTAINER
 ##  https://www.pulumi.com/registry/packages/mongodbatlas/api-docs/networkcontainer/

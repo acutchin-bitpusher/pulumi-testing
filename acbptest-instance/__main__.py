@@ -19,6 +19,7 @@ commontags = {
 }
 
 vpc_net_stack_ref = pulumi.StackReference( pulumi_org_name + "/" + env_config["vpc_net_pulumi_project_name"] + "/" + pulumi_stack_name )
+pulumi.export( "vpc_net_stack_ref", vpc_net_stack_ref )
 pulumi.export( "vpc_net_self_link", vpc_net_stack_ref.get_output("vpc_net_self_link") )
 vpc_net = vpc_net_stack_ref.get_output( "vpc-net" )
 pulumi.export( "vpc_net_name", vpc_net["name"] )

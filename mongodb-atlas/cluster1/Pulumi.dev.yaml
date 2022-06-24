@@ -1,0 +1,17 @@
+config:
+  acbptest-mdba-cluster1:env_config:
+    auto_scaling_disk_gb_enabled: "True"
+    description: acutchin@bitpusher.com testing pulumi/python/gcp/mongodbatlas cluster/db
+      networking
+    gcp_region: us-central1
+    mdba_gcp_region_name: CENTRAL_US
+    mdba_instance_size_name: M2
+    mdba_project_pulumi_project_name: acbptest-mdba-project
+    mongo_db_major_version: "5.0"
+  acbptest-mdba-cluster1:mdba_org_id: 61795f80e17d1a21780e34ee
+  acbptest-mdba-cluster1:mdba_org_name: Televisa-Univision
+  acbptest-mdba-cluster1:pulumi_org_name: univision
+  mongodbatlas:privateKey:
+    secure: AAABAHVvwHfxxLKuu4m5vai5R4LZRd0HFJJucapjWZ7W07IdnNzArjUkdiDjW9t8ekZdl7HgSDlS1Z5mTEHLKajW4mE=
+  mongodbatlas:publicKey:
+    secure: AAABAEubovtR7A2Zk4Sbqn7ZBycvzzy8HKL95EjSna4C+1mq2Om+Kw==
